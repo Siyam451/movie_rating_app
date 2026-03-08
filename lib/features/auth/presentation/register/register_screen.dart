@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movieapp/features/auth/presentation/login/login_screen.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -116,7 +117,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (ctx)=> LoginScreen()));
+                    },
                     child: const Text("REGISTER"),
                   ),
                 ),

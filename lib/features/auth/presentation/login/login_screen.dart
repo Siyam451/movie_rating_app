@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movieapp/features/auth/presentation/home/home_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../register/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -73,7 +75,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Text(
                       "Filmrate",
                       style: TextStyle(
-                        fontSize: 28,
+                        fontSize: 38,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -84,7 +86,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   const Text(
                     "LOGIN",
                     style: TextStyle(
-                      fontWeight: FontWeight.bold,
+                      fontWeight: FontWeight.bold,fontSize: 24,
                       color: Color(0xff3f6378),
                     ),
                   ),
@@ -93,7 +95,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   const Text(
                     "WELCOME TO THE WORLD OF MOVIES",
-                    style: TextStyle(fontSize: 12),
+                    style: TextStyle(fontSize: 22),
                   ),
 
                   const SizedBox(height: 30),
@@ -153,12 +155,17 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      onPressed: () {
+                      onPressed: () async{
                         if (formKey.currentState!.validate()) {
+                          final prefs = await SharedPreferences.getInstance();
+
+                          await prefs.setBool("isLoggedIn", true);
+
                           print("Login success");
+                          Navigator.push(context, MaterialPageRoute(builder: (ctx)=> HomeScreen()));
                         }
                       },
-                      child: const Text("LOGIN"),
+                      child: const Text("LOGIN",style: TextStyle(color: Colors.white),),
                     ),
                   ),
 
