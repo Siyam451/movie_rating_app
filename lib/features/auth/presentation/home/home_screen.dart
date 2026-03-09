@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:movieapp/features/auth/presentation/home/providers/latest_movie_provider.dart';
+import 'package:movieapp/features/auth/presentation/home/providers/popular_movie_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/buttom_navbar.dart';
-import '../../../../data/latest_movie.dart';
-
 
 import '../home/widgets/category_chip.dart';
-import '../home/widgets/latest_card.dart';
 import '../home/widgets/movie_card.dart';
 
 import '../main-navbar/screens/profile_screen.dart';
@@ -36,6 +35,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
     Future.microtask(() {
       context.read<TrendingMoviesProvider>().getTrendingMovies();
+      context.read<PopularMoviesProvider>().getPopularMovies();
+      context.read<LatestMoviesProvider>().getLatestMovies();
     });
   }
 
@@ -132,44 +133,62 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 25),
 
-                /// TRENDING MOVIES FROM API
-                Consumer<TrendingMoviesProvider>(
-                  builder: (context, provider, child) {
+                /// MOVIE SECTION
+                SizedBox(
+                  height: 220,
+                  child: selectedIndex == 0
 
-                    if (provider.trendingScreenLoading) {
-                      return const Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
+                  /// POPULAR
+                      ? Consumer<PopularMoviesProvider>(
+                    builder: (context, provider, child) {
 
-                    if (provider.movies.isEmpty) {
-                      return const Text(
-                        "No movies found",
-                        style: TextStyle(color: Colors.white),
-                      );
-                    }
+                      if (provider.loading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
 
-                    return SizedBox(
-                      height: 220,
-                      child: ListView.builder(
+                      return ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: provider.movies.length,
                         itemBuilder: (context, index) {
 
                           final movie = provider.movies[index];
 
-                          return MovieCard(
-                            movie: movie,
-                          );
+                          return MovieCard(movie: movie);
                         },
-                      ),
-                    );
-                  },
+                      );
+                    },
+                  )
+
+                  /// TRENDING
+                      : Consumer<TrendingMoviesProvider>(
+                    builder: (context, provider, child) {
+
+                      if (provider.trendingScreenLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: provider.movies.length,
+                        itemBuilder: (context, index) {
+
+                          final movie = provider.movies[index];
+
+                          return MovieCard(movie: movie);
+                        },
+                      );
+                    },
+                  ),
                 ),
 
                 const SizedBox(height: 25),
 
-                /// LATEST RELEASES TITLE
+
+                ///latest movie section
                 const Text(
                   "Latest Releases",
                   style: TextStyle(
@@ -181,31 +200,120 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 15),
 
-                /// LATEST RELEASES LIST
-                SizedBox(
-                  height: 160,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: latestMovies.length,
-                    itemBuilder: (context, index) {
 
-                      final movie = latestMovies[index];
+                Consumer<LatestMoviesProvider>(
+                  builder: (context, provider, child) {
 
-                      return LatestCard(
-                        movie: movie,
-                      );
-                    },
-                  ),
-                ),
+                    if (provider.loading) {
+                      return const Center(child: CircularProgressIndicator());
+                    }
 
-                const SizedBox(height: 30),
+                    return ListView.builder(
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemCount: provider.movies.length,
+                      itemBuilder: (context, index) {
+
+                        final movie = provider.movies[index];
+
+                        return Container(
+                          margin: const EdgeInsets.only(bottom: 15),
+
+                          decoration: BoxDecoration(
+                            color: const Color(0xff1f2c3c),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+
+                          child: Row(
+                            children: [
+
+
+                              ClipRRect(
+                                borderRadius: const BorderRadius.only(
+                                  topLeft: Radius.circular(18),
+                                  bottomLeft: Radius.circular(18),
+                                ),
+
+                                child: Image.network(
+                                  "https://image.tmdb.org/t/p/w500${movie.posterPath}",
+                                  height: 120,
+                                  width: 100,
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+
+                              const SizedBox(width: 12),
+
+
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(vertical: 10),
+
+                                  child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+
+
+                                      Text(
+                                        movie.title,
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 6),
+
+                                      /// DESCRIPTION
+                                      Text(
+                                        movie.overview,
+                                        maxLines: 2,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: const TextStyle(
+                                          color: Colors.white70,
+                                          fontSize: 13,
+                                        ),
+                                      ),
+
+                                      const SizedBox(height: 6),
+
+
+                                      Row(
+                                        children: [
+
+                                          const Icon(
+                                            Icons.star,
+                                            color: Colors.orange,
+                                            size: 16,
+                                          ),
+
+                                          const SizedBox(width: 4),
+
+                                          Text(
+                                            movie.rating.toString(),
+                                            style: const TextStyle(color: Colors.white),
+                                          ),
+                                        ],
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      },
+                    );
+                  },
+                )
+
               ],
             ),
           ),
         ),
       ),
 
-      /// BOTTOM NAV BAR
       bottomNavigationBar: const BottomNavbar(selectedIndex: 0),
     );
   }

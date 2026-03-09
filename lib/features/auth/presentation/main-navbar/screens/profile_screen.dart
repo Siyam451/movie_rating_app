@@ -52,7 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      backgroundColor: const Color(0xfff5f5f5),
+      backgroundColor: Colors.black,
 
       body: SingleChildScrollView(
         child: Column(
@@ -60,7 +60,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
             /// HEADER
             Container(
-              height: 200,
+              height: 100,
               width: double.infinity,
               color:  Color(0xfff2846b),
               alignment: Alignment.center,
@@ -92,7 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   TextField(
                     controller: usernameController,
                     decoration: const InputDecoration(
-                      labelText: "Username",
+                      labelText: "Username",fillColor: Colors.white,
                       border: OutlineInputBorder(),
                     ),
                   ),

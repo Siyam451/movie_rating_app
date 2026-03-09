@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:movieapp/features/auth/presentation/home/providers/latest_movie_provider.dart';
 import 'package:movieapp/features/auth/presentation/main-navbar/screens/providers/trending_movies_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'features/auth/presentation/home/home_screen.dart';
+import 'features/auth/presentation/home/providers/popular_movie_provider.dart';
 import 'features/auth/presentation/starting/starting_screen.dart';
 
 
@@ -27,6 +29,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_)=> TrendingMoviesProvider()),
+        ChangeNotifierProvider(create: (_) => PopularMoviesProvider(),),
+        ChangeNotifierProvider(create: (_) => LatestMoviesProvider(),),
+
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
