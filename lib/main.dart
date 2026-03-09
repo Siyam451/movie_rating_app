@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:movieapp/features/auth/presentation/main-navbar/screens/providers/trending_movies_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'features/auth/presentation/home/home_screen.dart';
 import 'features/auth/presentation/starting/starting_screen.dart';
@@ -22,9 +24,14 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: isLoggedIn ?  HomeScreen() :  StartScreen(),
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_)=> TrendingMoviesProvider()),
+      ],
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        home: isLoggedIn ?  HomeScreen() :  StartScreen(),
+      ),
     );
   }
 }

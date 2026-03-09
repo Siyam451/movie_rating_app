@@ -59,7 +59,7 @@ class _MovieCardState extends State<MovieCard> {
             ClipRRect(
               borderRadius: BorderRadius.circular(25),
               child: Image.network(
-                widget.movie.image,
+                "https://image.tmdb.org/t/p/w500${widget.movie.posterPath}",
                 height: 220,
                 width: 200,
                 fit: BoxFit.cover,

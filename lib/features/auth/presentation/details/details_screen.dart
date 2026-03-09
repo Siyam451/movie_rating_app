@@ -26,7 +26,7 @@ class MovieDetailsScreen extends StatelessWidget {
               children: [
 
                 Image.network(
-                  movie.image,
+                  "https://image.tmdb.org/t/p/w500${movie.posterPath}",
                   height: 350,
                   width: double.infinity,
                   fit: BoxFit.cover,
@@ -99,7 +99,7 @@ class MovieDetailsScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                movie.description,
+                movie.overview,
                 style: const TextStyle(
                   color: Colors.white70,
                   fontSize: 14,
@@ -127,7 +127,7 @@ class MovieDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 5),
 
                   Text(
-                    movie.director,
+                    movie.overview,
                     style: const TextStyle(color: Colors.white70),
                   ),
 
@@ -145,7 +145,7 @@ class MovieDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 5),
 
                   Text(
-                    movie.actors.join(", "),
+                    "Siyam",
                     style: const TextStyle(color: Colors.white70),
                   ),
 
@@ -163,7 +163,7 @@ class MovieDetailsScreen extends StatelessWidget {
                   const SizedBox(height: 5),
 
                   Text(
-                    movie.boxOffice,
+                    "50000",
                     style: const TextStyle(color: Colors.white70),
                   ),
 

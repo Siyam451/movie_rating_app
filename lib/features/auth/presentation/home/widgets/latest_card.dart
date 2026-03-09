@@ -35,7 +35,7 @@ class LatestCard extends StatelessWidget {
             ClipRRect(
               borderRadius: BorderRadius.circular(20),
               child: Image.network(
-                movie.image,
+                "https://image.tmdb.org/t/p/w500${movie.posterPath}",
                 height: 160,
                 width: 120,
                 fit: BoxFit.cover,

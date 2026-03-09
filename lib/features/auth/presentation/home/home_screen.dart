@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:movieapp/features/auth/presentation/home/widgets/category_chip.dart';
-import 'package:movieapp/features/auth/presentation/home/widgets/latest_card.dart';
-import 'package:movieapp/features/auth/presentation/home/widgets/movie_card.dart';
-import 'package:movieapp/features/auth/presentation/main-navbar/screens/profile_screen.dart';
+import 'package:provider/provider.dart';
 
 import '../../../../common/widgets/buttom_navbar.dart';
 import '../../../../data/latest_movie.dart';
-import '../../../../data/movie_data.dart';
+
+
+import '../home/widgets/category_chip.dart';
+import '../home/widgets/latest_card.dart';
+import '../home/widgets/movie_card.dart';
+
+import '../main-navbar/screens/profile_screen.dart';
+import '../main-navbar/screens/providers/trending_movies_provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -27,7 +31,17 @@ class _HomeScreenState extends State<HomeScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+
+    Future.microtask(() {
+      context.read<TrendingMoviesProvider>().getTrendingMovies();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: const Color(0xff0f1b2b),
 
@@ -35,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -45,16 +60,21 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
 
-                     GestureDetector(
-                       onTap: (){
-                         Navigator.push(context, MaterialPageRoute(builder: (ctx)=> ProfileScreen()));
-                       },
-                       child: CircleAvatar(
+                    GestureDetector(
+                      onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => const ProfileScreen(),
+                          ),
+                        );
+                      },
+                      child: const CircleAvatar(
                         radius: 22,
                         backgroundImage:
                         NetworkImage("https://i.pravatar.cc/150?img=3"),
-                                           ),
-                     ),
+                      ),
+                    ),
 
                     const SizedBox(width: 12),
 
@@ -93,12 +113,14 @@ class _HomeScreenState extends State<HomeScreen> {
                     scrollDirection: Axis.horizontal,
                     itemCount: categories.length,
                     itemBuilder: (context, index) {
+
                       return GestureDetector(
                         onTap: () {
                           setState(() {
                             selectedIndex = index;
                           });
                         },
+
                         child: CategoryChip(
                           title: categories[index],
                           active: selectedIndex == index,
@@ -110,21 +132,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 25),
 
-                /// FEATURED MOVIES
-                SizedBox(
-                  height: 220,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    itemCount: movieList.length,
-                    itemBuilder: (context, index) {
+                /// TRENDING MOVIES FROM API
+                Consumer<TrendingMoviesProvider>(
+                  builder: (context, provider, child) {
 
-                      final movie = movieList[index];
-
-                      return MovieCard(
-                        movie: movie,
+                    if (provider.trendingScreenLoading) {
+                      return const Center(
+                        child: CircularProgressIndicator(),
                       );
-                    },
-                  ),
+                    }
+
+                    if (provider.movies.isEmpty) {
+                      return const Text(
+                        "No movies found",
+                        style: TextStyle(color: Colors.white),
+                      );
+                    }
+
+                    return SizedBox(
+                      height: 220,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: provider.movies.length,
+                        itemBuilder: (context, index) {
+
+                          final movie = provider.movies[index];
+
+                          return MovieCard(
+                            movie: movie,
+                          );
+                        },
+                      ),
+                    );
+                  },
                 ),
 
                 const SizedBox(height: 25),

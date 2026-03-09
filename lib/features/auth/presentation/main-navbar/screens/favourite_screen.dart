@@ -52,7 +52,7 @@ class FavoriteScreen extends StatelessWidget {
                   ),
 
                   child: Image.network(
-                    movie.image,
+                    movie.posterPath,
                     height: 110,
                     width: 100,
                     fit: BoxFit.cover,
@@ -84,7 +84,7 @@ class FavoriteScreen extends StatelessWidget {
                         const SizedBox(height: 6),
 
                         Text(
-                          movie.description,
+                          movie.overview,
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(

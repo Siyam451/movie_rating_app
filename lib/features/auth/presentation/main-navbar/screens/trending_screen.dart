@@ -11,139 +11,92 @@ class TrendingScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xff0f1b2b),
-      appBar: AppBar(title: Text('Trending Movies',),
-      backgroundColor: Colors.amber,
+
+      appBar: AppBar(
+        title: const Text("Trending Movies"),
+        backgroundColor: Colors.amber,
       ),
 
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+      body: ListView.builder(
+        padding: const EdgeInsets.all(20),
+        itemCount: movieList.length,
+        itemBuilder: (context, index) {
 
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          final movie = movieList[index];
 
-              const SizedBox(height: 10),
+          return GestureDetector(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (_) => MovieDetailsScreen(movie: movie),
+                ),
+              );
+            },
 
-              /// HEADER
-              Row(
+            child: Container(
+              margin: const EdgeInsets.only(bottom: 20),
+
+              child: Row(
                 children: [
 
-                  IconButton(
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.white),
-                    onPressed: () {
-                      Navigator.pop(context);
-                    },
+                  /// MOVIE IMAGE
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(15),
+                    child: Image.network(
+                      movie.posterPath,
+                      height: 90,
+                      width: 90,
+                      fit: BoxFit.cover,
+                    ),
                   ),
 
-                  const SizedBox(width: 10),
+                  const SizedBox(width: 15),
 
-                  const Text(
-                    "Top 10 Trending",
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 22,
-                      fontWeight: FontWeight.bold,
+                  /// MOVIE INFO
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+
+                        Text(
+                          movie.title,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        Text(
+                          movie.overview,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: const TextStyle(
+                            color: Colors.white70,
+                          ),
+                        ),
+
+                        const SizedBox(height: 5),
+
+                        Text(
+                          "⭐ ${movie.rating}",
+                          style: const TextStyle(
+                            color: Colors.orange,
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-
-              const SizedBox(height: 20),
-
-              /// MOVIE LIST
-              Expanded(
-                child: ListView.builder(
-                  itemCount: movieList.length,
-                  itemBuilder: (context, index) {
-
-                    final movie = movieList[index];
-
-                    return GestureDetector(
-
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) =>
-                                MovieDetailsScreen(movie: movie),
-                          ),
-                        );
-                      },
-
-                      child: Container(
-                        margin: const EdgeInsets.only(bottom: 20),
-
-                        child: Row(
-                          children: [
-
-                            /// MOVIE IMAGE
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.network(
-                                movie.image,
-                                height: 90,
-                                width: 90,
-                                fit: BoxFit.cover,
-                              ),
-                            ),
-
-                            const SizedBox(width: 15),
-
-                            /// MOVIE INFO
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment:
-                                CrossAxisAlignment.start,
-                                children: [
-
-                                  Text(
-                                    movie.title,
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 5),
-
-                                  Text(
-                                    movie.description,
-                                    maxLines: 2,
-                                    overflow: TextOverflow.ellipsis,
-                                    style: const TextStyle(
-                                      color: Colors.white70,
-                                      fontSize: 13,
-                                    ),
-                                  ),
-
-                                  const SizedBox(height: 5),
-
-                                  Text(
-                                    "⭐ ${movie.rating}",
-                                    style: const TextStyle(
-                                      color: Colors.orange,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
-        ),
+            ),
+          );
+        },
       ),
 
-      /// BOTTOM NAVIGATION
       bottomNavigationBar: const BottomNavbar(selectedIndex: 1),
     );
   }

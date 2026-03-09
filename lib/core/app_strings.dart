@@ -1,0 +1,3 @@
+class AppStrings {
+  static const String apiKey = "eyJhbGciOiJIUzI1NiJ9.eyJhdWQiOiJkNTExODMyNDhjM2RkMmI3NzlhYmM4NjFlYTNjMzkzYiIsIm5iZiI6MTc3MjI5Nzg0OC45NDEsInN1YiI6IjY5YTMxZTc4YzgxZWRlMWViNmE3OTc0OCIsInNjb3BlcyI6WyJhcGlfcmVhZCJdLCJ2ZXJzaW9uIjoxfQ.GhrKJ9oP9S48PpsUUDm7nIs7YhJ1oyUwWszuDcHzKVM";
+}
