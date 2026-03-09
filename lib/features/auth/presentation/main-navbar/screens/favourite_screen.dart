@@ -11,6 +11,9 @@ class FavoriteScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xff0f1b2b),
+      appBar: AppBar(title: Text('Favourite Movies',),
+        backgroundColor: Colors.amber,
+      ),
 
       body: favoriteMovies.isEmpty
           ? const Center(

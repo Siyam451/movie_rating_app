@@ -11,6 +11,9 @@ class TrendingScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xff0f1b2b),
+      appBar: AppBar(title: Text('Trending Movies',),
+      backgroundColor: Colors.amber,
+      ),
 
       body: SafeArea(
         child: Padding(

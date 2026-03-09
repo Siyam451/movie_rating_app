@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/login/login_screen.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
@@ -12,15 +13,36 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   bool obscure = true;
 
+  final usernameController = TextEditingController();
+  final emailController = TextEditingController();
+  final passwordController = TextEditingController();
+  final confirmPasswordController = TextEditingController();
+
+  Future<void> registerUser() async {
+
+    final prefs = await SharedPreferences.getInstance();
+
+    await prefs.setString("username", usernameController.text);
+    await prefs.setString("email", emailController.text);
+    await prefs.setString("password", passwordController.text);
+
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (_) => const LoginScreen()),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
 
     return Scaffold(
       backgroundColor: Colors.grey.shade200,
+
       body: SafeArea(
         child: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.all(25),
+
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -58,26 +80,32 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const SizedBox(height: 30),
 
+                /// USERNAME
                 const Text("Username"),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: usernameController,
+                  decoration: const InputDecoration(
                     hintText: "Enter your username",
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
+                /// EMAIL
                 const Text("Email"),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: emailController,
+                  decoration: const InputDecoration(
                     hintText: "Enter your email",
                   ),
                 ),
 
                 const SizedBox(height: 20),
 
+                /// PASSWORD
                 const Text("Password"),
                 TextField(
+                  controller: passwordController,
                   obscureText: obscure,
                   decoration: InputDecoration(
                     hintText: "Enter your password",
@@ -98,15 +126,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                 const SizedBox(height: 20),
 
+                /// CONFIRM PASSWORD
                 const Text("Confirm password"),
-                const TextField(
-                  decoration: InputDecoration(
+                TextField(
+                  controller: confirmPasswordController,
+                  decoration: const InputDecoration(
                     hintText: "Confirm password",
                   ),
                 ),
 
                 const SizedBox(height: 40),
 
+                /// REGISTER BUTTON
                 SizedBox(
                   width: double.infinity,
                   height: 55,
@@ -117,9 +148,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
                         borderRadius: BorderRadius.circular(30),
                       ),
                     ),
-                    onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (ctx)=> LoginScreen()));
-                    },
+
+                    onPressed: registerUser,
+
                     child: const Text("REGISTER"),
                   ),
                 ),

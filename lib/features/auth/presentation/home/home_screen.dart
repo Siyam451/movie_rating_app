@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/home/widgets/category_chip.dart';
 import 'package:movieapp/features/auth/presentation/home/widgets/latest_card.dart';
 import 'package:movieapp/features/auth/presentation/home/widgets/movie_card.dart';
+import 'package:movieapp/features/auth/presentation/main-navbar/screens/profile_screen.dart';
 
 import '../../../../common/widgets/buttom_navbar.dart';
 import '../../../../data/latest_movie.dart';
@@ -44,11 +45,16 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
 
-                    const CircleAvatar(
-                      radius: 22,
-                      backgroundImage:
-                      NetworkImage("https://i.pravatar.cc/150?img=3"),
-                    ),
+                     GestureDetector(
+                       onTap: (){
+                         Navigator.push(context, MaterialPageRoute(builder: (ctx)=> ProfileScreen()));
+                       },
+                       child: CircleAvatar(
+                        radius: 22,
+                        backgroundImage:
+                        NetworkImage("https://i.pravatar.cc/150?img=3"),
+                                           ),
+                     ),
 
                     const SizedBox(width: 12),
 
