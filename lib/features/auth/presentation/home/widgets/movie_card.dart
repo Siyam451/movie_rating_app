@@ -18,20 +18,17 @@ class MovieCard extends StatefulWidget {
 
 class _MovieCardState extends State<MovieCard> {
 
-  bool isFavorite = false;
+
 
   void toggleFavorite() {
 
-    setState(() {
-      isFavorite = !isFavorite;
+    if (favoriteMovies.contains(widget.movie)) {
+      favoriteMovies.remove(widget.movie);
+    } else {
+      favoriteMovies.add(widget.movie);
+    }
 
-      if (isFavorite) {
-        favoriteMovies.add(widget.movie);
-      } else {
-        favoriteMovies.remove(widget.movie);
-      }
-    });
-
+    setState(() {});
   }
 
   @override
@@ -103,7 +100,7 @@ class _MovieCardState extends State<MovieCard> {
               child: GestureDetector(
                 onTap: toggleFavorite,
                 child: Icon(
-                  isFavorite
+                  favoriteMovies.contains(widget.movie) // jdi ageh theke selected thake taile select kora jabe na
                       ? Icons.favorite
                       : Icons.favorite_border,
                   color: Colors.red,

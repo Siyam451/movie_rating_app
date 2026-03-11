@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../../../../../common/widgets/buttom_navbar.dart';
 import '../../../../../data/favourite_movies.dart';
 import '../../../../../models/movie_model.dart';
+import '../../home/home_screen.dart';
 
 class FavoriteScreen extends StatelessWidget {
   const FavoriteScreen({super.key});
@@ -11,7 +12,19 @@ class FavoriteScreen extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xff0f1b2b),
-      appBar: AppBar(title: Text('Favourite Movies',),
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                builder: (_) => const HomeScreen(),
+              ),
+            );
+          },
+        ),
+        title: Text('Favourite Movies',),
         backgroundColor: Colors.amber,
       ),
 
@@ -52,7 +65,7 @@ class FavoriteScreen extends StatelessWidget {
                   ),
 
                   child: Image.network(
-                    movie.posterPath,
+                    "https://image.tmdb.org/t/p/w500${movie.posterPath}",
                     height: 110,
                     width: 100,
                     fit: BoxFit.cover,
@@ -74,6 +87,8 @@ class FavoriteScreen extends StatelessWidget {
 
                         Text(
                           movie.title,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                           style: const TextStyle(
                             color: Colors.white,
                             fontSize: 16,
