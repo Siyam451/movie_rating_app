@@ -37,6 +37,12 @@ class MovieModel {
       releaseDate: json['release_date'] ?? "",
     );
   }
+
+  // These two overrides are used so Dart can compare Movie objects
+// based on their movie ID instead of their memory address.
+// Without this, two MovieModel objects with the same movie data
+// would still be considered different because they live in
+// different memory locations.
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
