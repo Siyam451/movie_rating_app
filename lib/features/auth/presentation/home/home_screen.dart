@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/home/providers/latest_movie_provider.dart';
 import 'package:movieapp/features/auth/presentation/home/providers/popular_movie_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/widgets/buttom_navbar.dart';
 
@@ -10,6 +11,7 @@ import '../home/widgets/movie_card.dart';
 
 import '../main-navbar/screens/profile_screen.dart';
 import '../main-navbar/screens/providers/trending_movies_provider.dart';
+import '../starting/starting_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -28,6 +30,22 @@ class _HomeScreenState extends State<HomeScreen> {
     "Movie",
     "TV Show"
   ];
+
+  Future<void> logout(BuildContext context) async {
+
+    final prefs = await SharedPreferences.getInstance();
+
+    // remove login status
+    await prefs.setBool("isLoggedIn", false);
+// i have used pushandremoveUntill because it will remove all the previous screen
+    Navigator.pushAndRemoveUntil(
+      context,
+      MaterialPageRoute(
+        builder: (_) => const StartScreen(),
+      ),
+          (route) => false,
+    );
+  }
 
   @override
   void initState() {
@@ -101,7 +119,15 @@ class _HomeScreenState extends State<HomeScreen> {
 
                     const SizedBox(width: 10),
 
-                    const Icon(Icons.language, color: Colors.white),
+                   ///logout
+
+                   IconButton(
+                       style: IconButton.styleFrom(
+                         backgroundColor: Colors.white
+                       ),
+                       onPressed: (){
+                     logout(context);
+                   }, icon: Icon(Icons.logout))
                   ],
                 ),
 
