@@ -91,6 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   TextField(
                     controller: usernameController,
+                    style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                       labelText: "Username",fillColor: Colors.white,
                       border: OutlineInputBorder(),
@@ -101,6 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   TextField(
                     controller: emailController,
+                    style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                       labelText: "Email",
                       border: OutlineInputBorder(),
@@ -111,6 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   TextField(
                     controller: phoneController,
+                    style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                       labelText: "Phone Number",
                       border: OutlineInputBorder(),
@@ -121,6 +124,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                   TextField(
                     controller: passwordController,
+                    style: const TextStyle(color: Colors.white),
                     decoration: const InputDecoration(
                       labelText: "Password",
                       border: OutlineInputBorder(),
