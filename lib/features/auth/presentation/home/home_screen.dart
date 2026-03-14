@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/home/providers/latest_movie_provider.dart';
 import 'package:movieapp/features/auth/presentation/home/providers/popular_movie_provider.dart';
+import 'package:movieapp/features/auth/presentation/home/providers/tv_show_provider.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -162,6 +163,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 /// MOVIE SECTION
                 SizedBox(
                   height: 220,
+
                   child: selectedIndex == 0
 
                   /// POPULAR
@@ -188,7 +190,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   )
 
                   /// TRENDING
-                      : Consumer<TrendingMoviesProvider>(
+                      : selectedIndex == 1
+                      ? Consumer<TrendingMoviesProvider>(
                     builder: (context, provider, child) {
 
                       if (provider.trendingScreenLoading) {
@@ -208,9 +211,55 @@ class _HomeScreenState extends State<HomeScreen> {
                         },
                       );
                     },
+                  )
+
+                  /// MOVIE
+                      : selectedIndex == 2
+                      ? Consumer<PopularMoviesProvider>(
+                    builder: (context, provider, child) {
+
+                      if (provider.loading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: provider.movies.length,
+                        itemBuilder: (context, index) {
+
+                          final movie = provider.movies[index];
+
+                          return MovieCard(movie: movie);
+                        },
+                      );
+                    },
+                  )
+
+                  /// TV SHOW
+                      : Consumer<TvShowProvider>(
+                    builder: (context, provider, child) {
+
+                      if (provider.tvshowloading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      }
+
+                      return ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: provider.shows.length,
+                        itemBuilder: (context, index) {
+
+                          final show = provider.shows[index];
+
+                          return MovieCard(movie: show);
+                        },
+                      );
+                    },
                   ),
                 ),
-
                 const SizedBox(height: 25),
 
 

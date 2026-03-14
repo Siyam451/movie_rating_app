@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/home/home_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import '../../../../core/services/authcontroller.dart';
 import '../register/register_screen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -155,14 +156,18 @@ class _LoginScreenState extends State<LoginScreen> {
                           borderRadius: BorderRadius.circular(30),
                         ),
                       ),
-                      onPressed: () async{
+                      onPressed: () async {
                         if (formKey.currentState!.validate()) {
-                          final prefs = await SharedPreferences.getInstance();
 
-                          await prefs.setBool("isLoggedIn", true);
+                          await AuthController.saveUserData(
+                            emailController.text,
+                            passwordController.text,
+                          );
 
-                          print("Login success");
-                          Navigator.push(context, MaterialPageRoute(builder: (ctx)=> HomeScreen()));
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (_) => HomeScreen()),
+                          );
                         }
                       },
                       child: const Text("LOGIN",style: TextStyle(color: Colors.white),),
