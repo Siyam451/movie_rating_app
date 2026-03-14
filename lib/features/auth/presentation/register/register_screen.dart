@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/login/login_screen.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../core/services/authcontroller.dart';
+
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({super.key});
 
@@ -17,14 +19,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
-
   Future<void> registerUser() async {
 
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString("username", usernameController.text);
-    await prefs.setString("email", emailController.text);
-    await prefs.setString("password", passwordController.text);
+    await AuthController.saveUserData(
+      emailController.text,
+      passwordController.text,
+    );
 
     Navigator.pushReplacement(
       context,

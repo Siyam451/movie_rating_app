@@ -159,15 +159,23 @@ class _LoginScreenState extends State<LoginScreen> {
                       onPressed: () async {
                         if (formKey.currentState!.validate()) {
 
-                          await AuthController.saveUserData(
-                            emailController.text,
-                            passwordController.text,
-                          );
+                          await AuthController.getUserData();
 
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (_) => HomeScreen()),
-                          );
+                          if (emailController.text == AuthController.email &&
+                              passwordController.text == AuthController.password) {
+
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (_) => HomeScreen()),
+                            );
+
+                          } else {
+
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text("Invalid email or password")),
+                            );
+
+                          }
                         }
                       },
                       child: const Text("LOGIN",style: TextStyle(color: Colors.white),),

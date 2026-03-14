@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../common/widgets/buttom_navbar.dart';
+import '../../../../../core/services/authcontroller.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -19,29 +20,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   void initState() {
     super.initState();
-    loadUserData();
+    loadUserData(); // screen ashar sathe sathe user er data load korbe
   }
 
   void loadUserData() async {
 
-    final prefs = await SharedPreferences.getInstance();
+    await AuthController.getUserData();
 
-    usernameController.text = prefs.getString("username") ?? "";
-    emailController.text = prefs.getString("email") ?? "";
-    phoneController.text = prefs.getString("phone") ?? "";
-    passwordController.text = prefs.getString("password") ?? "";
+    usernameController.text = "";
+    emailController.text = AuthController.email ?? "";
+    passwordController.text = AuthController.password ?? "";
 
     setState(() {});
   }
 
   void updateProfile() async {
 
-    final prefs = await SharedPreferences.getInstance();
-
-    await prefs.setString("username", usernameController.text);
-    await prefs.setString("email", emailController.text);
-    await prefs.setString("phone", phoneController.text);
-    await prefs.setString("password", passwordController.text);
+    await AuthController.saveUserData(
+      emailController.text,
+      passwordController.text,
+    );
 
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text("Profile Updated")),

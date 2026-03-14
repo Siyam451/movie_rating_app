@@ -22,6 +22,14 @@ class AuthController {
     password = userPassword;
   }
 
+  static Future<void> getUserData() async {
+
+    final prefs = await SharedPreferences.getInstance();
+
+    email = prefs.getString(_emailKey);
+    password = prefs.getString(_passwordKey);
+  }
+
   static Future<bool> isUserLoggedIn() async {
 
     final prefs = await SharedPreferences.getInstance();
