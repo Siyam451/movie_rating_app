@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/home/widgets/ratingdialog.dart';
+import 'package:movieapp/features/auth/presentation/home/widgets/user_rating.dart';
 import '../../../../../data/favourite_movies.dart';
 import '../../../../../models/movie_model.dart';
 import '../../details/details_screen.dart';
@@ -79,7 +80,7 @@ class _MovieCardState extends State<MovieCard> {
                       onSubmit: (rating) {
 
                         setState(() {
-                          userRating = rating;
+                          userRatings[widget.movie.id] = rating;
                         });
 
                       },
@@ -105,7 +106,7 @@ class _MovieCardState extends State<MovieCard> {
                       const SizedBox(width: 4),
 
                       Text(
-                        (userRating ?? widget.movie.rating).toString(),
+                        (userRatings[widget.movie.id] ?? widget.movie.rating).toString(),
                         style: const TextStyle(
                           color: Colors.white,
                           fontWeight: FontWeight.bold,
