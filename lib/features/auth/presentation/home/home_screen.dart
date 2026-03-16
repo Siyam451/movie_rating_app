@@ -1,18 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:movieapp/features/auth/presentation/details/details_screen.dart';
-import 'package:movieapp/features/auth/presentation/home/providers/latest_movie_provider.dart';
-import 'package:movieapp/features/auth/presentation/home/providers/popular_movie_provider.dart';
-import 'package:movieapp/features/auth/presentation/home/providers/tv_show_provider.dart';
+import 'package:movieapp/features/auth/presentation/home/widgets/latest_movie.dart';
+import 'package:movieapp/features/auth/presentation/home/widgets/popular_movie.dart';
+import 'package:movieapp/features/auth/presentation/home/widgets/top_bar_widget.dart';
+import 'package:movieapp/features/auth/presentation/home/widgets/trending_movie.dart';
+import 'package:movieapp/features/auth/presentation/home/widgets/tv_show.dart';
+
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../common/widgets/buttom_navbar.dart';
-
 import '../home/widgets/category_chip.dart';
-import '../home/widgets/movie_card.dart';
 
-import '../main-navbar/screens/profile_screen.dart';
+
 import '../main-navbar/screens/providers/trending_movies_provider.dart';
+import '../home/providers/latest_movie_provider.dart';
+import '../home/providers/popular_movie_provider.dart';
+import '../home/providers/tv_show_provider.dart';
+
 import '../starting/starting_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -33,10 +37,10 @@ class _HomeScreenState extends State<HomeScreen> {
     "TV Show"
   ];
 
+  /// LOGOUT FUNCTION
   Future<void> logout(BuildContext context) async {
 
     final prefs = await SharedPreferences.getInstance();
-
 
     await prefs.remove("isLoggedIn");
 
@@ -49,6 +53,7 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// LOGOUT DIALOG
   void showLogoutDialog() {
 
     showDialog(
@@ -65,7 +70,6 @@ class _HomeScreenState extends State<HomeScreen> {
 
           actions: [
 
-            /// CANCEL BUTTON
             TextButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -73,7 +77,6 @@ class _HomeScreenState extends State<HomeScreen> {
               child: const Text("Cancel"),
             ),
 
-            /// LOGOUT BUTTON
             ElevatedButton(
               onPressed: () {
                 Navigator.pop(context);
@@ -88,15 +91,21 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
+  /// FETCH DATA
   @override
   void initState() {
     super.initState();
 
     Future.microtask(() {
+
       context.read<TrendingMoviesProvider>().getTrendingMovies();
+
       context.read<PopularMoviesProvider>().getPopularMovies();
+
       context.read<TvShowProvider>().getTVShow();
+
       context.read<LatestMoviesProvider>().getLatestMovies();
+
     });
   }
 
@@ -104,76 +113,27 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
+
       backgroundColor: const Color(0xff0f1b2b),
 
       body: SafeArea(
+
         child: SingleChildScrollView(
+
           child: Padding(
+
             padding: const EdgeInsets.symmetric(horizontal: 16),
 
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
+
               children: [
 
                 const SizedBox(height: 10),
 
                 /// TOP BAR
-                Row(
-                  children: [
-
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (_) => const ProfileScreen(),
-                          ),
-                        );
-                      },
-                      child: const CircleAvatar(
-                        radius: 22,
-                        backgroundImage:
-                        NetworkImage("https://i.pravatar.cc/150?img=3"),
-                      ),
-                    ),
-
-                    const SizedBox(width: 12),
-
-                    Expanded(
-                      child: Container(
-                        height: 45,
-                        decoration: BoxDecoration(
-                          color: Colors.white10,
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                        child: const TextField(
-                          style: TextStyle(color: Colors.white),
-                          decoration: InputDecoration(
-                            hintText: "Search on KuKu",
-                            hintStyle: TextStyle(color: Colors.white60),
-                            prefixIcon:
-                            Icon(Icons.search, color: Colors.white60),
-                            border: InputBorder.none,
-                          ),
-                        ),
-                      ),
-                    ),
-
-                    const SizedBox(width: 10),
-
-                   ///logout
-
-                    IconButton(
-                      style: IconButton.styleFrom(
-                        backgroundColor: Colors.white,
-                      ),
-                      onPressed: showLogoutDialog,
-                      icon: const Icon(
-                        Icons.logout,
-                        color: Colors.black,
-                      ),
-                    )
-                  ],
+                HomeTopBar(
+                  onLogout: showLogoutDialog,
                 ),
 
                 const SizedBox(height: 20),
@@ -181,16 +141,23 @@ class _HomeScreenState extends State<HomeScreen> {
                 /// CATEGORY CHIPS
                 SizedBox(
                   height: 40,
+
                   child: ListView.builder(
+
                     scrollDirection: Axis.horizontal,
+
                     itemCount: categories.length,
+
                     itemBuilder: (context, index) {
 
                       return GestureDetector(
+
                         onTap: () {
+
                           setState(() {
                             selectedIndex = index;
                           });
+
                         },
 
                         child: CategoryChip(
@@ -209,106 +176,21 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 220,
 
                   child: selectedIndex == 0
+                      ? const PopularMoviesSection()
 
-                  /// POPULAR
-                      ? Consumer<PopularMoviesProvider>(
-                    builder: (context, provider, child) {
-
-                      if (provider.loading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: provider.movies.length,
-                        itemBuilder: (context, index) {
-
-                          final movie = provider.movies[index];
-
-                          return MovieCard(movie: movie);
-                        },
-                      );
-                    },
-                  )
-
-                  /// TRENDING
                       : selectedIndex == 1
-                      ? Consumer<TrendingMoviesProvider>(
-                    builder: (context, provider, child) {
+                      ? const TrendingMoviesSection()
 
-                      if (provider.trendingScreenLoading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: provider.movies.length,
-                        itemBuilder: (context, index) {
-
-                          final movie = provider.movies[index];
-
-                          return MovieCard(movie: movie);
-                        },
-                      );
-                    },
-                  )
-
-                  /// MOVIE
                       : selectedIndex == 2
-                      ? Consumer<PopularMoviesProvider>(
-                    builder: (context, provider, child) {
+                      ? const PopularMoviesSection()
 
-                      if (provider.loading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: provider.movies.length,
-                        itemBuilder: (context, index) {
-
-                          final movie = provider.movies[index];
-
-                          return MovieCard(movie: movie);
-                        },
-                      );
-                    },
-                  )
-
-                  /// TV SHOW
-                      : Consumer<TvShowProvider>(
-                    builder: (context, provider, child) {
-
-                      if (provider.tvshowloading) {
-                        return const Center(
-                          child: CircularProgressIndicator(),
-                        );
-                      }
-
-                      return ListView.builder(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: provider.shows.length,
-                        itemBuilder: (context, index) {
-
-                          final show = provider.shows[index];
-
-                          return MovieCard(movie: show);
-                        },
-                      );
-                    },
-                  ),
+                      : const TvShowSection(),
                 ),
+
                 const SizedBox(height: 25),
 
-
-                ///latest movie section
-                 Text(
+                /// LATEST TITLE
+                const Text(
                   "Latest Releases",
                   style: TextStyle(
                     color: Colors.white,
@@ -319,118 +201,8 @@ class _HomeScreenState extends State<HomeScreen> {
 
                 const SizedBox(height: 15),
 
-
-                Consumer<LatestMoviesProvider>(
-                  builder: (context, provider, child) {
-
-                    if (provider.loading) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    return ListView.builder(
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemCount: provider.movies.length,
-                      itemBuilder: (context, index) {
-
-                        final movie = provider.movies[index];
-
-                        return GestureDetector(
-                          onTap: (){
-                            Navigator.push(context, MaterialPageRoute(builder: (ctx)=> MovieDetailsScreen(movie: movie)));
-                          },
-                          child: Container(
-                            margin: const EdgeInsets.only(bottom: 15),
-
-                            decoration: BoxDecoration(
-                              color: const Color(0xff1f2c3c),
-                              borderRadius: BorderRadius.circular(18),
-                            ),
-
-                            child: Row(
-                              children: [
-
-
-                                ClipRRect(
-                                  borderRadius: const BorderRadius.only(
-                                    topLeft: Radius.circular(18),
-                                    bottomLeft: Radius.circular(18),
-                                  ),
-
-                                  child: Image.network(
-                                    "https://image.tmdb.org/t/p/w500${movie.posterPath}",
-                                    height: 120,
-                                    width: 100,
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-
-                                const SizedBox(width: 12),
-
-
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.symmetric(vertical: 10),
-
-                                    child: Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-
-
-                                        Text(
-                                          movie.title,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-
-                                        const SizedBox(height: 6),
-
-                                        /// DESCRIPTION
-                                        Text(
-                                          movie.overview,
-                                          maxLines: 2,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: const TextStyle(
-                                            color: Colors.white70,
-                                            fontSize: 13,
-                                          ),
-                                        ),
-
-                                        const SizedBox(height: 6),
-
-
-                                        Row(
-                                          children: [
-
-                                            const Icon(
-                                              Icons.star,
-                                              color: Colors.orange,
-                                              size: 16,
-                                            ),
-
-                                            const SizedBox(width: 4),
-
-                                            Text(
-                                              movie.rating.toString(),
-                                              style: const TextStyle(color: Colors.white),
-                                            ),
-                                          ],
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    );
-                  },
-                )
+                /// LATEST MOVIES LIST
+                const LatestMoviesSection(),
 
               ],
             ),
