@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/login/login_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
 import '../../../../core/services/authcontroller.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -151,7 +149,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
                     onPressed: registerUser,
 
-                    child: const Text("REGISTER"),
+                    child: const Text("REGISTER",style: TextStyle(color: Colors.white),),
                   ),
                 ),
               ],

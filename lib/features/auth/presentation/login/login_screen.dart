@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:movieapp/features/auth/presentation/home/home_screen.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../core/services/authcontroller.dart';
 import '../register/register_screen.dart';
 
@@ -163,6 +162,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                           if (emailController.text == AuthController.email &&
                               passwordController.text == AuthController.password) {
+
 
                             Navigator.pushReplacement(
                               context,

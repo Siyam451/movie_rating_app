@@ -5,6 +5,7 @@ import 'package:movieapp/features/auth/presentation/main-navbar/screens/provider
 import 'package:provider/provider.dart';
 
 import 'core/services/authcontroller.dart';
+import 'data/favourite_movies.dart';
 import 'features/auth/presentation/home/home_screen.dart';
 import 'features/auth/presentation/home/providers/popular_movie_provider.dart';
 import 'features/auth/presentation/starting/starting_screen.dart';
@@ -14,6 +15,8 @@ import 'features/auth/presentation/starting/starting_screen.dart';
 void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
+  await AuthController.getUserData();
+  await loadFavorites();
 
   bool isLoggedIn = await AuthController.isUserLoggedIn();
 

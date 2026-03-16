@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:movieapp/features/auth/presentation/home/widgets/ratingdialog.dart';
 import '../../../../../data/favourite_movies.dart';
 import '../../../../../models/movie_model.dart';
 import '../../details/details_screen.dart';
@@ -17,6 +18,7 @@ class MovieCard extends StatefulWidget {
 }
 
 class _MovieCardState extends State<MovieCard> {
+  double? userRating;
 
 
 
@@ -27,6 +29,7 @@ class _MovieCardState extends State<MovieCard> {
     } else {
       favoriteMovies.add(widget.movie);
     }
+    loadFavorites();
 
     setState(() {});
   }
@@ -67,32 +70,53 @@ class _MovieCardState extends State<MovieCard> {
             Positioned(
               top: 10,
               left: 10,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 4),
-                decoration: BoxDecoration(
-                  color: Colors.orange,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Row(
-                  children: [
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (_) => RatingDialog(
+                      movieTitle: widget.movie.title,
+                      onSubmit: (rating) {
 
-                    const Icon(Icons.star,
-                        color: Colors.white, size: 16),
+                        setState(() {
+                          userRating = rating;
+                        });
 
-                    const SizedBox(width: 4),
-
-                    Text(
-                      widget.movie.rating.toString(),
-                      style: const TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold),
+                      },
                     ),
-                  ],
+                  );
+                },
+                child: Container(
+                  padding: const EdgeInsets.symmetric(
+                      horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.orange,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+
+                      const Icon(
+                        Icons.star,
+                        color: Colors.white,
+                        size: 16,
+                      ),
+
+                      const SizedBox(width: 4),
+
+                      Text(
+                        (userRating ?? widget.movie.rating).toString(),
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+
+                    ],
+                  ),
                 ),
               ),
             ),
-
             /// FAVORITE BUTTON
             Positioned(
               top: 10,

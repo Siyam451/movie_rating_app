@@ -36,15 +36,54 @@ class _HomeScreenState extends State<HomeScreen> {
 
     final prefs = await SharedPreferences.getInstance();
 
-    // remove login status
-    await prefs.setBool("isLoggedIn", false);
-// i have used pushandremoveUntill because it will remove all the previous screen
+
+    await prefs.remove("isLoggedIn");
+
     Navigator.pushAndRemoveUntil(
       context,
       MaterialPageRoute(
         builder: (_) => const StartScreen(),
       ),
           (route) => false,
+    );
+  }
+
+  void showLogoutDialog() {
+
+    showDialog(
+      context: context,
+      builder: (context) {
+
+        return AlertDialog(
+
+          title: const Text("Logout"),
+
+          content: const Text(
+              "Are you sure you want to logout?"
+          ),
+
+          actions: [
+
+            /// CANCEL BUTTON
+            TextButton(
+              onPressed: () {
+                Navigator.pop(context);
+              },
+              child: const Text("Cancel"),
+            ),
+
+            /// LOGOUT BUTTON
+            ElevatedButton(
+              onPressed: () {
+                Navigator.pop(context);
+                logout(context);
+              },
+              child: const Text("Logout"),
+            )
+
+          ],
+        );
+      },
     );
   }
 
@@ -55,6 +94,7 @@ class _HomeScreenState extends State<HomeScreen> {
     Future.microtask(() {
       context.read<TrendingMoviesProvider>().getTrendingMovies();
       context.read<PopularMoviesProvider>().getPopularMovies();
+      context.read<TvShowProvider>().getTVShow();
       context.read<LatestMoviesProvider>().getLatestMovies();
     });
   }
@@ -122,13 +162,16 @@ class _HomeScreenState extends State<HomeScreen> {
 
                    ///logout
 
-                   IconButton(
-                       style: IconButton.styleFrom(
-                         backgroundColor: Colors.white
-                       ),
-                       onPressed: (){
-                     logout(context);
-                   }, icon: Icon(Icons.logout))
+                    IconButton(
+                      style: IconButton.styleFrom(
+                        backgroundColor: Colors.white,
+                      ),
+                      onPressed: showLogoutDialog,
+                      icon: const Icon(
+                        Icons.logout,
+                        color: Colors.black,
+                      ),
+                    )
                   ],
                 ),
 

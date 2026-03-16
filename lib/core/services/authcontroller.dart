@@ -4,6 +4,7 @@ class AuthController {
 
   static const _emailKey = "user-email";
   static const _passwordKey = "user-password";
+  static const _loginKey = "is-logged-in";
 
   static String? email;
   static String? password;
@@ -17,6 +18,7 @@ class AuthController {
 
     await prefs.setString(_emailKey, userEmail);
     await prefs.setString(_passwordKey, userPassword);
+    await prefs.setBool(_loginKey, true);
 
     email = userEmail;
     password = userPassword;
@@ -34,14 +36,16 @@ class AuthController {
 
     final prefs = await SharedPreferences.getInstance();
 
-    return prefs.getString(_emailKey) != null;
+    return prefs.getBool(_loginKey) ?? false;
   }
 
   static Future<void> logout() async {
 
     final prefs = await SharedPreferences.getInstance();
 
-    await prefs.remove(_emailKey);
-    await prefs.remove(_passwordKey);
+    await prefs.clear();
+
+    email = null;
+    password = null;
   }
 }
